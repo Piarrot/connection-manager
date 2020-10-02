@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Products",
+        "protocol": "https",
+        "baseURL": "example.com/products",
+        "endpoints": [
+            {
+                "method": "get",
+                "name": "GetProduct",
+                "url": "/{id}",
+                "urlParameters": {}
+            },
+            {
+                "name": "GetProducts",
+                "url": "/",
+                "queryParameters": {
+                    "page": 1
+                }
+            }
+        ]
+    }
+]
