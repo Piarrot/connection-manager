@@ -4,12 +4,12 @@
 
 ## Description
 
-Endpoint managment utility to seamlesly connect backend and frontend stacks in a monorepo architecture
+Endpoint management utility to seamlesly connect backend and frontend stacks in a monorepo architecture, developed using TDD
 
 ## Running tests
 
 ```sh
-$ yarn test
+$ yarn test --coverage
 ```
 
 ## Extra

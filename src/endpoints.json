@@ -18,5 +18,18 @@
                 }
             }
         ]
+    },
+    {
+        "name": "RickAndMorty",
+        "protocol": "https",
+        "baseURL": "rickandmortyapi.com/api",
+        "endpoints": [
+            {
+                "method": "get",
+                "name": "getMorty",
+                "url": "/character/2",
+                "urlParameters": {}
+            }
+        ]
     }
 ]
