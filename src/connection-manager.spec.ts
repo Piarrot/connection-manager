@@ -1,5 +1,5 @@
 import ConnectionManager from "./connection-manager";
-import { TestDTO } from "./test-tdo";
+import { TestDTO } from "./test-dto";
 const connectionManager = new ConnectionManager();
 
 test("getEndpointsByName", () => {

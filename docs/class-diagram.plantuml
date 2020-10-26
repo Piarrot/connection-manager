@@ -1,0 +1,76 @@
+@startuml ConnectionManager
+
+class ConnectionManager{
+    - registry: EndpointRegistry
+    + call<T>(endpoint:string, options):Promise<T>
+}
+ConnectionManager *-->"1" EndpointRegistry
+ConnectionManager ..> Endpoint : calls
+
+enum HTMLMethod << string >> {
+    get
+    post
+    delete
+    patch
+    put
+}
+
+class Endpoint {
+    + method: HTMLMethod
+    + name: string
+    + url: string
+    + urlParameters: Object
+    + queryParameters: Object
+}
+Endpoint o-->"1" HTMLMethod
+
+class EndpointRegistry{
+    - endpointCollection: HashList<EndpointCollection>
+    - endpoints: HashList<Endpoint>
+    + getEndpoint(endpointName:string):Endpoint
+    + serializeEndpoints(): JSON
+}
+
+EndpointRegistry *-->"*" EndpointCollection
+EndpointRegistry *-->"*" Endpoint
+
+enum URLProtocol <<string>> {
+    http
+    https
+    ftp
+    webdav_http
+    webdav_https
+}
+
+class EndpointCollection{
+    + name: string
+    + protocol: URLProtocol
+    + baseURL: string
+    + endpoints: List<Endpoint>
+}
+
+Endpoint *-->"1" EndpointCollection
+EndpointCollection *-->"*" Endpoint
+EndpointCollection *-->"1" URLProtocol
+
+class EndpointFactory {
+    + {static} createEndpointCollection(endpointCollection: Object): EndpointCollection
+    + {static} createEndpoint(endpoint: Object): Endpoint
+}
+
+EndpointRegistry ...> EndpointFactory : uses
+EndpointFactory ...> Endpoint: instantiates
+EndpointFactory ...> EndpointCollection: instantiates
+
+abstract Caller {
+    + {abstract} call<T>(endpoint: Endpoint): Promise<T>
+}
+ConnectionManager --> Caller
+
+class NodeCaller {
+    + call<T>(endpoint: Endpoint): Promise<T>
+}
+
+Caller <|-- NodeCaller
+
+@enduml

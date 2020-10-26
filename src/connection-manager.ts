@@ -1,7 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
 import EndpointCollection from "./endpoint-collection";
-import Endpoint from "./endpoint";
 import objectPath from "object-path";
 import fetch from "node-fetch";
 
