@@ -4,6 +4,6 @@ export default interface Endpoint {
     method: HTTPMethod;
     name: string;
     url: string;
-    urlParameters: any;
-    queryParameters: any;
+    urlParameters?: any;
+    queryParameters?: any;
 }
