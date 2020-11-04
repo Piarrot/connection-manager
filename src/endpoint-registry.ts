@@ -1,5 +1,3 @@
-import objectPath from "object-path";
-
 import {
     EndpointCollection,
     EndpointCollectionConfig,
@@ -11,8 +9,6 @@ export class EndpointRegistry {
         string,
         EndpointCollection
     >();
-
-    constructor() {}
 
     getEndpointByName(endpointPath: string): Endpoint {
         const endpointPathArray = endpointPath.split(".");

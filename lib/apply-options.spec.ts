@@ -9,16 +9,12 @@ beforeEach(() => {
     };
 });
 test("parse config, no default options", () => {
-    applyOptions(
-        targetObj,
-        {
-            name: "a name",
-            anObject: {
-                aSetting: true,
-            },
+    applyOptions(targetObj, {
+        name: "a name",
+        anObject: {
+            aSetting: true,
         },
-        {}
-    );
+    });
     expect(targetObj.name).toBe("a name");
     expect(targetObj.aProperty).toBe(125);
     expect(targetObj.anObject).toEqual({
@@ -41,7 +37,7 @@ test("parse config, with some default options", () => {
                 aSetting: true,
             },
         },
-        defaultOptions
+        { defaultOptions }
     );
     expect(targetObj.name).toBe("a name");
     expect(targetObj.aProperty).toBe(130);
@@ -51,7 +47,7 @@ test("parse config, with some default options", () => {
 });
 
 test("parse config, with custom parsers", () => {
-    const parsers = {
+    const customParsers = {
         aNewProp: "_newProp",
         name: (value: string) => {
             targetObj.name = value.toUpperCase().replace(" ", "");
@@ -66,8 +62,7 @@ test("parse config, with custom parsers", () => {
                 aSetting: true,
             },
         },
-        {},
-        parsers
+        { customParsers }
     );
     expect(targetObj.name).toBe("ANAME");
     expect(targetObj.aProperty).toBe(125);

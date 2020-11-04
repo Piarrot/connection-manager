@@ -25,15 +25,12 @@ export class Endpoint {
     constructor(config: EndpointConfig, parent?: EndpointCollection) {
         this.parent = parent;
 
-        applyOptions(
-            this,
-            config,
-            {},
-            {
+        applyOptions(this, config, {
+            customParsers: {
                 name: "_name",
                 method: parseHTTPMethod,
-            }
-        );
+            },
+        });
     }
 
     getFullName() {

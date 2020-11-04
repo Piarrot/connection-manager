@@ -1,23 +1,30 @@
-interface parserOptions {
+interface ParserOptions {
     [key: string]: string | ParserFunction;
 }
 
 type ParserFunction = (value: any) => void;
 
+interface ExtraOptions {
+    defaultOptions?: any;
+    customParsers?: ParserOptions;
+}
+
 export function applyOptions(
     obj: any,
-    providedOptions: any,
-    defaultOptions: any = {},
-    parsers?: parserOptions
+    providedOptions?: any,
+    extra?: ExtraOptions
 ) {
-    let optionsToApply = defaultOptions;
+    let optionsToApply: any = {};
+    if (extra && extra.defaultOptions) {
+        optionsToApply = { ...extra.defaultOptions };
+    }
     if (providedOptions) {
-        optionsToApply = { ...defaultOptions, ...providedOptions };
+        optionsToApply = { ...optionsToApply, ...providedOptions };
     }
     for (const key in optionsToApply) {
         const option = optionsToApply[key];
-        if (parsers && parsers[key]) {
-            runParser(parsers[key], obj, option);
+        if (extra && extra.customParsers && extra.customParsers[key]) {
+            runParser(extra.customParsers[key], obj, option);
             continue;
         }
         obj[key] = option;

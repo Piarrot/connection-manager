@@ -1,4 +1,6 @@
+import { applyOptions } from "../lib/apply-options";
 import { NodeCaller } from "./callers/node-caller";
+import { EndpointCollectionConfig } from "./endpoint-collection";
 import { EndpointRegistry } from "./endpoint-registry";
 
 export interface ConnectionManagerConfig {
@@ -11,18 +13,13 @@ export default class ConnectionManager {
     private caller: NodeCaller = new NodeCaller();
 
     constructor(config?: ConnectionManagerConfig) {
-        if (config) {
-            this.loadConfig(config);
-        }
-    }
-
-    private loadConfig(config: ConnectionManagerConfig) {
-        if (config.caller) {
-            this.caller = config.caller;
-        }
-        if (config.endpoints) {
-            this.endpointRegistry.loadEndpoints(config.endpoints);
-        }
+        applyOptions(this, config, {
+            customParsers: {
+                endpoints: (value: EndpointCollectionConfig[]) => {
+                    this.endpointRegistry.loadEndpoints(value);
+                },
+            },
+        });
     }
 
     async call<T>(endpointName: string): Promise<T> {
