@@ -11,6 +11,7 @@
                 "urlParameters": {}
             },
             {
+                "method": "get",
                 "name": "GetProducts",
                 "url": "/",
                 "queryParameters": {
