@@ -12,11 +12,9 @@ export class EndpointRegistry {
 
     loadEndpoints(endpointsConfig: EndpointCollectionConfig[]) {
         for (const endpointColOpt of endpointsConfig) {
-            this.assertUniqueCollectionName(endpointColOpt.name);
-            this.endpoints.set(
-                endpointColOpt.name,
-                new EndpointCollection(endpointColOpt)
-            );
+            const collection = new EndpointCollection(endpointColOpt);
+            this.assertUniqueCollectionName(collection.name);
+            this.endpoints.set(collection.name, collection);
         }
     }
 
@@ -31,7 +29,7 @@ export class EndpointRegistry {
     }
 
     private processEndpointPath(endpointPath: string) {
-        const endpointPathArray = endpointPath.split(".");
+        const endpointPathArray = endpointPath.toLowerCase().split(".");
         this.assertEndpointPathSize(endpointPathArray);
         return {
             collectionName: endpointPathArray[0],

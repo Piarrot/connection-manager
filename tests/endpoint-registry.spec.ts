@@ -86,10 +86,18 @@ test("given two endpoints with the same name in the same collection, should thro
     }).toThrow();
 });
 
-test("given a correct endpoit name, when requesting an endpoint, should return endpoint", () => {
+test("given a correct endpoint name, when requesting an endpoint, should return endpoint", () => {
     endpointRegistry.loadEndpoints(endpoints);
     const endpointName = "TestCollection.TestGet";
     const endpoint = endpointRegistry.getEndpointByName(endpointName);
-    expect(endpoint.getFullName()).toBe(endpointName);
+    expect(endpoint.getFullName()).toBe(endpointName.toLowerCase());
+    expect(endpoint.getURL()).toBe("http://localhost:3000/");
+});
+
+test("when requesting an endpoint, given a correct endpoint name but incorrect case, should return endpoint", () => {
+    endpointRegistry.loadEndpoints(endpoints);
+    const endpointName = "TestCollection.TestGET";
+    const endpoint = endpointRegistry.getEndpointByName(endpointName);
+    expect(endpoint.getFullName()).toBe(endpointName.toLowerCase());
     expect(endpoint.getURL()).toBe("http://localhost:3000/");
 });

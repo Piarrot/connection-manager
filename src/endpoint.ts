@@ -30,8 +30,10 @@ export class Endpoint {
 
         applyOptions(this, config, {
             customParsers: {
-                name: "_name",
-                method: (value) => {
+                name: (value: string) => {
+                    this._name = value.toLowerCase();
+                },
+                method: (value: string) => {
                     this._method = parseHTTPMethod(value);
                 },
             },

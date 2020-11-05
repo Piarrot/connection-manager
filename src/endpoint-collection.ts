@@ -1,3 +1,4 @@
+import { applyOptions } from "../lib/apply-options";
 import { EndpointConfig, Endpoint } from "./endpoint";
 
 type ConnectionProtocol = "http" | "https";
@@ -10,22 +11,29 @@ export interface EndpointCollectionConfig {
 }
 
 export class EndpointCollection {
-    private name: string;
+    private _name: string;
+    public get name(): string {
+        return this._name;
+    }
     private protocol: string;
     private baseURL: string;
     private endpoints: Map<string, Endpoint> = new Map<string, Endpoint>();
 
     constructor(config: EndpointCollectionConfig) {
-        this.name = config.name;
-        this.protocol = config.protocol;
-        this.baseURL = config.baseURL;
-        for (const endpointConfig of config.endpoints) {
-            this.assertUniqueEndpointName(endpointConfig.name);
-            this.endpoints.set(
-                endpointConfig.name,
-                new Endpoint(endpointConfig, this)
-            );
-        }
+        applyOptions(this, config, {
+            customParsers: {
+                name: (value: string) => {
+                    this._name = value.toLowerCase();
+                },
+                endpoints: (endpoints: EndpointConfig[]) => {
+                    for (const endpointConfig of endpoints) {
+                        const endpoint = new Endpoint(endpointConfig, this);
+                        this.assertUniqueEndpointName(endpoint.name);
+                        this.endpoints.set(endpoint.name, endpoint);
+                    }
+                },
+            },
+        });
     }
 
     getName() {
