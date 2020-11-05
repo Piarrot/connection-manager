@@ -13,14 +13,18 @@ export class EndpointCollection {
     private name: string;
     private protocol: string;
     private baseURL: string;
-    private endpoints: Endpoint[] = [];
+    private endpoints: Map<string, Endpoint> = new Map<string, Endpoint>();
 
     constructor(config: EndpointCollectionConfig) {
         this.name = config.name;
         this.protocol = config.protocol;
         this.baseURL = config.baseURL;
         for (const endpointConfig of config.endpoints) {
-            this.endpoints.push(new Endpoint(endpointConfig, this));
+            this.assertUniqueEndpointName(endpointConfig.name);
+            this.endpoints.set(
+                endpointConfig.name,
+                new Endpoint(endpointConfig, this)
+            );
         }
     }
 
@@ -33,13 +37,17 @@ export class EndpointCollection {
     }
 
     getEndpoint(endpointName: string) {
-        const endpoint = this.endpoints.find((endpoint) => {
-            return endpoint.name == endpointName;
-        });
+        const endpoint = this.endpoints.get(endpointName);
         if (!endpoint)
             throw Error(
                 `Endpoint "${endpointName}" in collection "${this.name}" not found`
             );
         return endpoint;
+    }
+
+    assertUniqueEndpointName(name: string) {
+        if (this.endpoints.has(name)) {
+            throw Error(`Endpoint "${name}" is duplicated`);
+        }
     }
 }

@@ -12,6 +12,7 @@ export class EndpointRegistry {
 
     loadEndpoints(endpointsConfig: EndpointCollectionConfig[]) {
         for (const endpointColOpt of endpointsConfig) {
+            this.assertUniqueCollectionName(endpointColOpt.name);
             this.endpoints.set(
                 endpointColOpt.name,
                 new EndpointCollection(endpointColOpt)
@@ -48,6 +49,12 @@ export class EndpointRegistry {
             throw Error(
                 `Path '${endpointPathArray.toString()}' has too few nodes`
             );
+        }
+    }
+
+    private assertUniqueCollectionName(name: string) {
+        if (this.endpoints.has(name)) {
+            throw Error(`Collection "${name}" is duplicated`);
         }
     }
 }

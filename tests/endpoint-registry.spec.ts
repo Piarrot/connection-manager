@@ -31,6 +31,61 @@ test("given a path too long, when requesting the endpoint, should throw", () => 
     }).toThrow();
 });
 
+test("given two collections with the same name, should throw", () => {
+    expect(() => {
+        endpointRegistry.loadEndpoints([
+            {
+                name: "TestCollection",
+                protocol: "http",
+                baseURL: "localhost:3000",
+                endpoints: [
+                    {
+                        method: "get",
+                        name: "TestGet",
+                        url: "/",
+                    },
+                ],
+            },
+            {
+                name: "TestCollection",
+                protocol: "http",
+                baseURL: "localhost:3000",
+                endpoints: [
+                    {
+                        method: "get",
+                        name: "TestGet",
+                        url: "/",
+                    },
+                ],
+            },
+        ]);
+    }).toThrow();
+});
+
+test("given two endpoints with the same name in the same collection, should throw", () => {
+    expect(() => {
+        endpointRegistry.loadEndpoints([
+            {
+                name: "TestCollection",
+                protocol: "http",
+                baseURL: "localhost:3000",
+                endpoints: [
+                    {
+                        method: "get",
+                        name: "TestGet",
+                        url: "/",
+                    },
+                    {
+                        method: "get",
+                        name: "TestGet",
+                        url: "/",
+                    },
+                ],
+            },
+        ]);
+    }).toThrow();
+});
+
 test("given a correct endpoit name, when requesting an endpoint, should return endpoint", () => {
     endpointRegistry.loadEndpoints(endpoints);
     const endpointName = "TestCollection.TestGet";
