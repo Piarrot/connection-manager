@@ -9,3 +9,23 @@ test("creating an endpoint with incorrect method should throw", () => {
         });
     }).toThrow();
 });
+
+test("creating an endpoint with correct method should work", () => {
+    expect(
+        new Endpoint({
+            name: "an endpoint",
+            url: "https://example.com",
+            method: "post",
+        })
+    ).toBeDefined();
+});
+
+test("creating an endpoint with correct method, but in caps, should work", () => {
+    expect(
+        new Endpoint({
+            name: "an endpoint",
+            url: "https://example.com",
+            method: "POST",
+        })
+    ).toBeDefined();
+});

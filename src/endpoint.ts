@@ -16,7 +16,10 @@ export class Endpoint {
         return this._name;
     }
     private url: string;
-    private method: HTTPMethod;
+    private _method: HTTPMethod;
+    public get method(): HTTPMethod {
+        return this._method;
+    }
     private urlParameters: any;
     private queryParameters: any;
 
@@ -28,7 +31,9 @@ export class Endpoint {
         applyOptions(this, config, {
             customParsers: {
                 name: "_name",
-                method: parseHTTPMethod,
+                method: (value) => {
+                    this._method = parseHTTPMethod(value);
+                },
             },
         });
     }

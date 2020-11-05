@@ -11,7 +11,7 @@ export enum HTTPMethod {
 export function parseHTTPMethod(methodString: string): HTTPMethod {
     return isValidStringEnum<HTTPMethod>(
         HTTPMethod,
-        methodString,
+        methodString.toLowerCase(),
         `Incorrect method "${methodString}"`
     );
 }

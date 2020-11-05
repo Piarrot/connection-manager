@@ -1,35 +1,13 @@
 [
     {
-        "name": "Products",
-        "protocol": "https",
-        "baseURL": "example.com/products",
+        "name": "TestCollection",
+        "protocol": "http",
+        "baseURL": "localhost:3000",
         "endpoints": [
             {
                 "method": "get",
-                "name": "GetProduct",
-                "url": "/{id}",
-                "urlParameters": {}
-            },
-            {
-                "method": "get",
-                "name": "GetProducts",
-                "url": "/",
-                "queryParameters": {
-                    "page": 1
-                }
-            }
-        ]
-    },
-    {
-        "name": "RickAndMorty",
-        "protocol": "https",
-        "baseURL": "rickandmortyapi.com/api",
-        "endpoints": [
-            {
-                "method": "get",
-                "name": "getMorty",
-                "url": "/character/2",
-                "urlParameters": {}
+                "name": "TestGet",
+                "url": "/"
             }
         ]
     }
