@@ -17,11 +17,21 @@ afterEach(async () => {
     server.close();
 });
 
-test("given a correct endpoint make a call and works", async () => {
+test("given a correct endpoint name, makes a call and works", async () => {
     connectionManager = new ConnectionManager({
         endpoints,
     });
     const endpointName = "TestCollection.TestGet";
     const data = await connectionManager.call<TestDTO>(endpointName);
     expect(data.method).toBe("GET");
+});
+
+test("given an incorrect endpoint name, trying to make a call should throw", async () => {
+    connectionManager = new ConnectionManager({
+        endpoints,
+    });
+    const endpointName = "TestCollection.WrongEndpoint";
+    await expect(
+        connectionManager.call<TestDTO>(endpointName)
+    ).rejects.toThrow();
 });

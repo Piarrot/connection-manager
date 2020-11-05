@@ -32,11 +32,14 @@ export class EndpointCollection {
         return `${this.protocol}://${this.baseURL}`;
     }
 
-    getEndpoint(namePathArray: string[]) {
+    getEndpoint(endpointName: string) {
         const endpoint = this.endpoints.find((endpoint) => {
-            return endpoint.name == namePathArray[0];
+            return endpoint.name == endpointName;
         });
-        if (!endpoint) return null;
+        if (!endpoint)
+            throw Error(
+                `Endpoint "${endpointName}" in collection "${this.name}" not found`
+            );
         return endpoint;
     }
 }
