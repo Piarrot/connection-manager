@@ -31,16 +31,14 @@ export class EndpointRegistry {
 
     private processEndpointPath(endpointPath: string) {
         const endpointPathArray = endpointPath.split(".");
-        this.throwIfEndpointPathArrayIsTooLongOrTooShort(endpointPathArray);
+        this.assertEndpointPathSize(endpointPathArray);
         return {
             collectionName: endpointPathArray[0],
             endpointName: endpointPathArray[1],
         };
     }
 
-    private throwIfEndpointPathArrayIsTooLongOrTooShort(
-        endpointPathArray: string[]
-    ) {
+    private assertEndpointPathSize(endpointPathArray: string[]) {
         if (endpointPathArray.length > 2) {
             throw Error(
                 `Path '${endpointPathArray.toString()}' with too many nodes`
