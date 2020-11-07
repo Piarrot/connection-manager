@@ -13,7 +13,7 @@ export class EndpointRegistry {
     loadEndpoints(endpointsConfig: EndpointCollectionConfig[]) {
         for (const endpointColOpt of endpointsConfig) {
             const collection = new EndpointCollection(endpointColOpt);
-            this.assertUniqueCollectionName(collection.name);
+            this.assertIsUniqueCollectionName(collection.name);
             this.endpoints.set(collection.name, collection);
         }
     }
@@ -50,7 +50,7 @@ export class EndpointRegistry {
         }
     }
 
-    private assertUniqueCollectionName(name: string) {
+    private assertIsUniqueCollectionName(name: string) {
         if (this.endpoints.has(name)) {
             throw Error(`Collection "${name}" is duplicated`);
         }

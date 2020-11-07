@@ -1,11 +1,9 @@
 import { applyOptions } from "../lib/apply-options";
 import { EndpointConfig, Endpoint } from "./endpoint";
-
-type ConnectionProtocol = "http" | "https";
+import { isValidBaseURL } from "../lib/string-utils";
 
 export interface EndpointCollectionConfig {
     name: string;
-    protocol: string;
     baseURL: string;
     endpoints: EndpointConfig[];
 }
@@ -15,23 +13,15 @@ export class EndpointCollection {
     public get name(): string {
         return this._name;
     }
-    private protocol: string;
     private baseURL: string;
     private endpoints: Map<string, Endpoint> = new Map<string, Endpoint>();
 
     constructor(config: EndpointCollectionConfig) {
         applyOptions(this, config, {
             customParsers: {
-                name: (value: string) => {
-                    this._name = value.toLowerCase();
-                },
-                endpoints: (endpoints: EndpointConfig[]) => {
-                    for (const endpointConfig of endpoints) {
-                        const endpoint = new Endpoint(endpointConfig, this);
-                        this.assertUniqueEndpointName(endpoint.name);
-                        this.endpoints.set(endpoint.name, endpoint);
-                    }
-                },
+                name: this.processAndAssertIsValidName,
+                baseURL: this.processAndAssertIsValidBaseURL,
+                endpoints: this.processAndAssertValidEndpoints,
             },
         });
     }
@@ -41,7 +31,7 @@ export class EndpointCollection {
     }
 
     getURL() {
-        return `${this.protocol}://${this.baseURL}`;
+        return `${this.baseURL}`;
     }
 
     getEndpoint(endpointName: string) {
@@ -53,7 +43,38 @@ export class EndpointCollection {
         return endpoint;
     }
 
-    assertUniqueEndpointName(name: string) {
+    private processAndAssertIsValidName(name: string) {
+        name = name.toLowerCase();
+        name = name.trim();
+        if (name.includes(" ")) {
+            throw Error(
+                `Endpoints and Collections should not have spaces in their names: ${name}`
+            );
+        }
+        this._name = name;
+    }
+
+    private processAndAssertIsValidBaseURL(value: string) {
+        this.baseURL = value.toLowerCase().trim();
+
+        if (!isValidBaseURL(this.baseURL)) {
+            throw Error(`Invalid base url: ${this.baseURL}`);
+        }
+
+        if (this.baseURL.endsWith("/")) {
+            this.baseURL = this.baseURL.substring(0, this.baseURL.length - 1);
+        }
+    }
+
+    private processAndAssertValidEndpoints(endpoints: EndpointConfig[]) {
+        for (const endpointConfig of endpoints) {
+            const endpoint = new Endpoint(endpointConfig, this);
+            this.assertIsUniqueEndpointName(endpoint.name);
+            this.endpoints.set(endpoint.name, endpoint);
+        }
+    }
+
+    private assertIsUniqueEndpointName(name: string) {
         if (this.endpoints.has(name)) {
             throw Error(`Endpoint "${name}" is duplicated`);
         }
