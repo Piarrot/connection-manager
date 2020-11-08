@@ -1,5 +1,6 @@
 import { Server, createServer } from "http";
 import express, { Express } from "express";
+import bodyParser from "body-parser";
 
 export async function startDummyServer(): Promise<{
     server: Server;
@@ -23,7 +24,18 @@ export async function startDummyServer(): Promise<{
         throw "Could not bind to any port from 3000 to 3050; Exiting";
     }
 
+    app.use(bodyParser.json());
+
     app.all("/", (req, res) => {
+        res.send({
+            method: req.method,
+            query: req.query,
+            body: req.body,
+            params: req.params,
+        });
+    });
+
+    app.all("/:id", (req, res) => {
         res.send({
             method: req.method,
             query: req.query,

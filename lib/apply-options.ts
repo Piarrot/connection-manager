@@ -29,6 +29,7 @@ export function applyOptions(
         }
         obj[key] = option;
     }
+    return obj;
 }
 
 function runParser(parser: string | ParserFunction, obj: any, value: any) {

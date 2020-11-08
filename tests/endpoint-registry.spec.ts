@@ -36,7 +36,6 @@ test("given two collections with the same name, should throw", () => {
         endpointRegistry.loadEndpoints([
             {
                 name: "TestCollection",
-                protocol: "http",
                 baseURL: "localhost:3000",
                 endpoints: [
                     {
@@ -48,7 +47,6 @@ test("given two collections with the same name, should throw", () => {
             },
             {
                 name: "TestCollection",
-                protocol: "http",
                 baseURL: "localhost:3000",
                 endpoints: [
                     {
@@ -67,7 +65,6 @@ test("given two endpoints with the same name in the same collection, should thro
         endpointRegistry.loadEndpoints([
             {
                 name: "TestCollection",
-                protocol: "http",
                 baseURL: "localhost:3000",
                 endpoints: [
                     {

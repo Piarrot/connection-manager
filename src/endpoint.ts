@@ -1,7 +1,12 @@
 import { EndpointCollection } from "./endpoint-collection";
 import { HTTPMethod, parseHTTPMethod } from "./http-method";
 import { applyOptions } from "../lib/apply-options";
-import { isValidFullURL, isValidURLFragment } from "../lib/string-utils";
+import {
+    isValidFullURL,
+    isValidFullURLWithParams,
+    isValidURLFragment,
+} from "../lib/string-utils";
+import qs from "qs";
 
 export interface EndpointConfig {
     method: string;
@@ -22,7 +27,10 @@ export class Endpoint {
         return this._method;
     }
     private urlParameters: any;
+
     private queryParameters: any;
+
+    private defaultBody: {};
 
     private parent: EndpointCollection;
 
@@ -50,13 +58,46 @@ export class Endpoint {
         return `${this.parent.getURL()}${this.url}`;
     }
 
+    getBodyObject(body: any) {
+        return applyOptions({}, body, {
+            defaultOptions: this.defaultBody,
+        });
+    }
+
+    getURLWithParameters(params: any) {
+        const allParams = applyOptions({}, params, {
+            defaultOptions: this.urlParameters,
+        });
+
+        const originalURL = this.getURL();
+
+        let finalURL = originalURL;
+
+        for (const key in allParams) {
+            const param = allParams[key];
+            if (originalURL.indexOf(`:${key}`) == -1) {
+                throw Error(`Key ${key} not found in url: ${originalURL}`);
+            }
+            finalURL = finalURL.replace(`:${key}`, param);
+        }
+
+        return finalURL;
+    }
+
+    getQueryString(query: any) {
+        const allQueryParams = applyOptions({}, query, {
+            defaultOptions: this.queryParameters,
+        });
+        return qs.stringify(allQueryParams);
+    }
+
     private processAndAssertIsValidURL(url: string) {
         url = url.toLowerCase();
         url = url.trim();
         if (this.parent && !isValidURLFragment(url)) {
             throw Error(`Invalid url: ${url} `);
         }
-        if (!this.parent && !isValidFullURL(url)) {
+        if (!this.parent && !isValidFullURLWithParams(url)) {
             throw Error(`Invalid url': ${url} `);
         }
         this.url = url;
